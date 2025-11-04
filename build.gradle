@@ -1,0 +1,115 @@
+plugins {
+    alias(libs.plugins.java)
+    alias(libs.plugins.quarkus)
+    alias(libs.plugins.maven.publish)
+}
+
+dependencies {
+    implementation platform('io.pipeline:pipeline-bom:1.0.0-SNAPSHOT')
+    implementation 'io.quarkus:quarkus-grpc'
+    implementation 'io.quarkus:quarkus-arc'
+    implementation 'io.quarkus:quarkus-smallrye-health'
+    
+    // Consul integration
+    implementation 'io.quarkus:quarkus-vertx'
+    implementation 'io.smallrye.stork:stork-service-discovery-consul'
+
+    implementation("io.smallrye.reactive:smallrye-mutiny-vertx-consul-client")
+    
+    // Pipeline libraries (published to Maven Local)
+    implementation 'io.pipeline:grpc-stubs:1.0.0-SNAPSHOT'
+    implementation 'io.pipeline:pipeline-commons:1.0.0-SNAPSHOT'
+    implementation 'io.pipeline:pipeline-api:1.0.0-SNAPSHOT'
+    implementation 'io.pipeline:dynamic-grpc:1.0.0-SNAPSHOT'
+    implementation 'io.pipeline:dynamic-grpc-registration-clients:1.0.0-SNAPSHOT'
+
+    testImplementation 'io.quarkus:quarkus-junit5'
+}
+
+group = 'io.pipeline.application'
+version = '1.0.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+test {
+    systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+}
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
+// Publishing configuration
+publishing {
+    publications {
+        //noinspection GroovyAssignabilityCheck
+        maven(MavenPublication) { publication ->
+            from components.java
+            //noinspection GroovyAssignabilityCheck
+            artifact(file("${buildDir}/quarkus-app/quarkus-run.jar")) { artifact ->
+                artifact.classifier = 'runner'
+                artifact.builtBy tasks.named('quarkusBuild')
+            }
+            pom { pom ->
+                name.set('Mapping Service')
+                description.set('Data mapping and transformation service for the Pipeline platform')
+                url.set('https://github.com/io-pipeline/mapping-service')
+
+                licenses {
+                    license {
+                        name.set('Apache License 2.0')
+                        url.set('https://www.apache.org/licenses/LICENSE-2.0')
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set('krickert')
+                        email.set('krickert@rokkon.com')
+                        name.set('Pipeline Engine Team')
+                    }
+                }
+
+                scm {
+                    connection.set('scm:git:git://github.com/io-pipeline/mapping-service.git')
+                    developerConnection.set('scm:git:ssh://github.com/io-pipeline/mapping-service.git')
+                    url.set('https://github.com/io-pipeline/mapping-service')
+                }
+            }
+        }
+    }
+
+    repositories {
+        // Publish to Maven Local for development
+        mavenLocal()
+
+        // Publish to Reposilite (primary artifact repository)
+        maven {
+            name = "Reposilite"
+            url = uri(version.toString().endsWith('-SNAPSHOT')
+                ? "https://maven.rokkon.com/snapshots"
+                : "https://maven.rokkon.com/releases")
+            credentials {
+                username = project.findProperty("reposilite.user") ?: System.getenv("REPOS_USER") ?: "admin"
+                password = project.findProperty("reposilite.token") ?: System.getenv("REPOS_PAT")
+            }
+        }
+
+        // Publish to Gitea Maven registry (backup)
+        maven {
+            name = "Gitea"
+            url = uri("https://git.rokkon.com/api/packages/io-pipeline/maven")
+            credentials {
+                username = project.findProperty("gitea.user") ?: System.getenv("GIT_USER") ?: "krickert"
+                password = project.findProperty("gitea.token") ?: System.getenv("GIT_TOKEN")
+            }
+        }
+    }
+}
