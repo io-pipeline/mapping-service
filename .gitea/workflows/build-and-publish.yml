@@ -34,7 +34,7 @@ jobs:
           path: build/test-results/
 
       - name: Publish to Reposilite and Gitea
-        if: gitea.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         env:
           REPOS_PAT: ${{ secrets.REPOS_PAT }}
           GIT_USER: ${{ secrets.GIT_USER }}
@@ -44,7 +44,7 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     needs: build
-    if: gitea.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
 
