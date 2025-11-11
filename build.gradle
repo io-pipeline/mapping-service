@@ -36,8 +36,8 @@ dependencies {
     testImplementation 'io.quarkus:quarkus-junit5'
 }
 
-group 'ai.pipestream'
-version '${pipelineBomVersion}'
+group = "ai.pipestream"
+version = "${pipelineBomVersion}"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
