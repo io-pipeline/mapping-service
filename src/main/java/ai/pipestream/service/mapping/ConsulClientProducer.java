@@ -1,4 +1,4 @@
-package io.pipeline.application;
+package ai.pipestream.service.mapping;
 
 import io.vertx.ext.consul.ConsulClientOptions;
 import io.vertx.mutiny.core.Vertx;

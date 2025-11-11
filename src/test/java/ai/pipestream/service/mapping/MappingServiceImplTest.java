@@ -1,17 +1,16 @@
-package io.pipeline.application;
+package ai.pipestream.service.mapping;
 
-import com.google.protobuf.Value;
 import com.google.protobuf.util.Values;
-import io.pipeline.data.v1.PipeDoc;
-import io.pipeline.data.v1.ProcessingMapping;
-import io.pipeline.mapping.ApplyMappingRequest;
-import io.pipeline.mapping.ApplyMappingResponse;
-import io.pipeline.mapping.MappingRule;
+import ai.pipestream.data.v1.PipeDoc;
+import ai.pipestream.data.v1.ProcessingMapping;
+import ai.pipestream.mapping.ApplyMappingRequest;
+import ai.pipestream.mapping.ApplyMappingResponse;
+import ai.pipestream.mapping.MappingRule;
 import org.junit.jupiter.api.Test;
 
 import com.google.protobuf.Struct;
-import io.pipeline.data.v1.SearchMetadata;
-import io.pipeline.data.v1.MappingType;
+import ai.pipestream.data.v1.SearchMetadata;
+import ai.pipestream.data.v1.MappingType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -87,8 +86,8 @@ class MappingServiceImplTest {
                 .addSourceFieldPaths("first_name")
                 .addSourceFieldPaths("last_name")
                 .addTargetFieldPaths("full_name")
-                .setAggregateConfig(io.pipeline.data.v1.AggregateConfig.newBuilder()
-                        .setAggregationType(io.pipeline.data.v1.AggregateConfig.AggregationType.CONCATENATE)
+                .setAggregateConfig(ai.pipestream.data.v1.AggregateConfig.newBuilder()
+                        .setAggregationType(ai.pipestream.data.v1.AggregateConfig.AggregationType.CONCATENATE)
                         .setDelimiter(" "))
                 .build();
 
@@ -122,8 +121,8 @@ class MappingServiceImplTest {
                 .addSourceFieldPaths("val1")
                 .addSourceFieldPaths("val2")
                 .addTargetFieldPaths("sum")
-                .setAggregateConfig(io.pipeline.data.v1.AggregateConfig.newBuilder()
-                        .setAggregationType(io.pipeline.data.v1.AggregateConfig.AggregationType.SUM))
+                .setAggregateConfig(ai.pipestream.data.v1.AggregateConfig.newBuilder()
+                        .setAggregationType(ai.pipestream.data.v1.AggregateConfig.AggregationType.SUM))
                 .build();
 
         ApplyMappingRequest request = ApplyMappingRequest.newBuilder()
@@ -155,7 +154,7 @@ class MappingServiceImplTest {
                 .addSourceFieldPaths("full_name")
                 .addTargetFieldPaths("first_name")
                 .addTargetFieldPaths("last_name")
-                .setSplitConfig(io.pipeline.data.v1.SplitConfig.newBuilder().setDelimiter(" "))
+                .setSplitConfig(ai.pipestream.data.v1.SplitConfig.newBuilder().setDelimiter(" "))
                 .build();
 
         ApplyMappingRequest request = ApplyMappingRequest.newBuilder()
@@ -188,7 +187,7 @@ class MappingServiceImplTest {
                 .setMappingType(MappingType.MAPPING_TYPE_TRANSFORM)
                 .addSourceFieldPaths("lower")
                 .addTargetFieldPaths("upper")
-                .setTransformConfig(io.pipeline.data.v1.TransformConfig.newBuilder().setRuleName("uppercase"))
+                .setTransformConfig(ai.pipestream.data.v1.TransformConfig.newBuilder().setRuleName("uppercase"))
                 .build();
 
         ApplyMappingRequest request = ApplyMappingRequest.newBuilder()
@@ -219,7 +218,7 @@ class MappingServiceImplTest {
                 .setMappingType(MappingType.MAPPING_TYPE_TRANSFORM)
                 .addSourceFieldPaths("untrimmed")
                 .addTargetFieldPaths("trimmed")
-                .setTransformConfig(io.pipeline.data.v1.TransformConfig.newBuilder().setRuleName("trim"))
+                .setTransformConfig(ai.pipestream.data.v1.TransformConfig.newBuilder().setRuleName("trim"))
                 .build();
 
         ApplyMappingRequest request = ApplyMappingRequest.newBuilder()

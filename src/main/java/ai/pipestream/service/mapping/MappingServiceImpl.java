@@ -1,11 +1,11 @@
-package io.pipeline.application;
+package ai.pipestream.service.mapping;
 
 import com.google.protobuf.Value;
-import io.pipeline.data.v1.*;
-import io.pipeline.mapping.ApplyMappingRequest;
-import io.pipeline.mapping.ApplyMappingResponse;
-import io.pipeline.mapping.MappingRule;
-import io.pipeline.mapping.MappingService;
+import ai.pipestream.data.v1.*;
+import ai.pipestream.mapping.ApplyMappingRequest;
+import ai.pipestream.mapping.ApplyMappingResponse;
+import ai.pipestream.mapping.MappingRule;
+import ai.pipestream.mapping.MappingService;
 import io.quarkus.grpc.GrpcService;
 import io.smallrye.mutiny.Uni;
 import org.jboss.logging.Logger;

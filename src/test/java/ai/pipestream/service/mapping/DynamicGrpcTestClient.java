@@ -1,9 +1,8 @@
-package io.pipeline.application;
+package ai.pipestream.service.mapping;
 
 import io.pipeline.dynamic.grpc.client.DynamicGrpcClientFactory;
 import io.pipeline.platform.registration.*;
 import io.quarkus.runtime.StartupEvent;
-import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
