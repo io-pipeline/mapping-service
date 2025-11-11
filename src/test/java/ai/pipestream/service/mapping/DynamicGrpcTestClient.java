@@ -1,18 +1,23 @@
 package ai.pipestream.service.mapping;
 
-import io.pipeline.dynamic.grpc.client.DynamicGrpcClientFactory;
-import io.pipeline.platform.registration.*;
+import ai.pipestream.dynamic.grpc.client.DynamicGrpcClientFactory;
+import ai.pipestream.platform.registration.*;
 import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
 /**
  * Test client to verify dynamic gRPC discovery works
+ * Disabled during tests to avoid Consul connection attempts
  */
 @ApplicationScoped
 public class DynamicGrpcTestClient {
+
+    @ConfigProperty(name = "test.client.enabled", defaultValue = "true")
+    boolean enabled;
     
     private static final Logger LOG = Logger.getLogger(DynamicGrpcTestClient.class);
     
@@ -20,8 +25,13 @@ public class DynamicGrpcTestClient {
     DynamicGrpcClientFactory grpcClientFactory;
     
     void onStart(@Observes StartupEvent ev) {
+        if (!enabled) {
+            LOG.info("DynamicGrpcTestClient disabled via configuration");
+            return;
+        }
+
         LOG.info("Testing dynamic gRPC client discovery...");
-        
+
         // Try to dynamically discover and connect to platform-registration-service
         testDynamicDiscovery();
     }
